@@ -1,6 +1,8 @@
 import logging
 
+# Хорошей практикой является указание на то что именно мы логгируем
 logger = logging.getLogger(__name__)
+
 
 def super_sum(a, b):
     logger.info('Calculating super sum for arguments: {} and {}'.format(a, b))
