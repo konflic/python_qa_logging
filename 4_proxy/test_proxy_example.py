@@ -1,7 +1,6 @@
 from browsermobproxy import Server, Client
 import pytest
 import pprint
-import time
 import urllib.parse
 from selenium import webdriver
 
@@ -14,19 +13,22 @@ client.new_har()
 
 @pytest.fixture
 def browser(request):
-    chrome_options = webdriver.ChromeOptions()
+    options = webdriver.ChromeOptions()
     url = urllib.parse.urlparse(client.proxy).path
-    chrome_options.add_argument('--proxy-server=%s' % url)
-    driver = webdriver.Chrome(options=chrome_options)
+    # https://stackoverflow.com/questions/24507078/how-to-deal-with-certificates-using-selenium
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--proxy-server=%s' % url)
+    driver = webdriver.Chrome(options=options)
     request.addfinalizer(driver.quit)
     return driver
 
 
 def test_proxy(browser):
-    browser.get('http://localhost/opencart/')
-    browser.get('http://localhost/opencart/admin')
-    browser.find_element_by_id("input-username").send_keys("admin")
-    browser.find_element_by_id("input-password").send_keys("admin")
-    browser.find_element_by_tag_name("form").submit()
+    browser.get("https://ya.ru/")
+    # browser.get('http://localhost/opencart/')
+    # browser.get('http://localhost/opencart/admin')
+    # browser.find_element_by_id("input-username").send_keys("admin")
+    # browser.find_element_by_id("input-password").send_keys("admin")
+    # browser.find_element_by_tag_name("form").submit()
     pprint.pprint(client.har)
     server.stop()
