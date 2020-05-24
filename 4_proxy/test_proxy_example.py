@@ -1,34 +1,45 @@
-from browsermobproxy import Server, Client
 import pytest
-import pprint
 import urllib.parse
-from selenium import webdriver
 
-server = Server("browsermob-proxy/bin/browsermob-proxy")
-server.start()
-client = Client("localhost:8080")
-proxy = server.create_proxy()
-client.new_har()
+from helper import chromedriver
+from browsermobproxy import Server, Client
+from selenium import webdriver
 
 
 @pytest.fixture
-def browser(request):
+def proxy_server(request):
+    server = Server("browsermob-proxy/bin/browsermob-proxy")
+    server.start()
+    client = Client("localhost:8080")
+    server.create_proxy()
+    request.addfinalizer(server.stop)
+    client.new_har()
+    return client
+
+
+@pytest.fixture
+def browser(request, proxy_server):
     options = webdriver.ChromeOptions()
-    url = urllib.parse.urlparse(client.proxy).path
+    # Избавляемся от ошибок сертификатов
     # https://stackoverflow.com/questions/24507078/how-to-deal-with-certificates-using-selenium
     options.add_argument('--ignore-certificate-errors')
-    options.add_argument('--proxy-server=%s' % url)
-    driver = webdriver.Chrome(options=options)
+    # Устанавливаем прокси сервер
+    proxy_url = urllib.parse.urlparse(proxy_server.proxy).path
+    options.add_argument('--proxy-server=%s' % proxy_url)
+    driver = webdriver.Chrome(options=options, executable_path=chromedriver())
+    driver.proxy = proxy_server
+    driver.implicitly_wait(5)
     request.addfinalizer(driver.quit)
     return driver
 
 
 def test_proxy(browser):
-    browser.get("https://ya.ru/")
-    # browser.get('http://localhost/opencart/')
-    # browser.get('http://localhost/opencart/admin')
-    # browser.find_element_by_id("input-username").send_keys("admin")
-    # browser.find_element_by_id("input-password").send_keys("admin")
-    # browser.find_element_by_tag_name("form").submit()
-    pprint.pprint(client.har)
-    server.stop()
+    browser.get('https://yandex.ru/')
+    browser.get('https://demo.opencart.com/')
+    browser.get('https://demo.opencart.com/admin')
+    browser.find_element_by_id("input-username").send_keys("admin")
+    browser.find_element_by_id("input-password").send_keys("admin")
+    browser.find_element_by_tag_name("form").submit()
+    har = browser.proxy.har['log']
+    for el in har:
+        print(el)

@@ -1,6 +1,6 @@
 import pytest
 import logging
-import time
+
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver, AbstractEventListener
 from selenium.webdriver.common.keys import Keys
@@ -60,12 +60,12 @@ def driver(request):
     return wd
 
 
-def test_logging(driver):
-    driver.get('https://habr.com/en/')
-    driver.find_element_by_id('search-form-btn').click()
-    find_field = driver.find_element_by_id('search-form-field')
+def test_logging(chrome):
+    chrome.get('https://habr.com/en/')
+    chrome.find_element_by_id('search-form-btn').click()
+    find_field = chrome.find_element_by_id('search-form-field')
     find_field.send_keys('Python')
     find_field.send_keys(Keys.ENTER)
-    driver.back()
-    driver.execute_script("console.log('Wooooohooooo');")
-    driver.save_screenshot('finish_test.png')
+    chrome.back()
+    chrome.execute_script("console.log('Wooooohooooo');")
+    chrome.save_screenshot('finish_test.png')
