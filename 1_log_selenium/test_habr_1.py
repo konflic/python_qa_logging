@@ -1,8 +1,8 @@
 from HabrObject import HabrObject
 
 
-def test_post_open(chrome):
-    page = HabrObject(chrome)
+def test_post_open(browser):
+    page = HabrObject(browser)
     page.open("https://habr.com/en")
     page.click_search()
     page.search('Python')
@@ -11,8 +11,8 @@ def test_post_open(chrome):
     page.is_present(page.POST_BODY)
 
 
-def test_hubs_open(chrome):
-    page = HabrObject(chrome)
+def test_hubs_open(browser):
+    page = HabrObject(browser)
     page.open("https://habr.com/en")
     page.click_search()
     page.search('Python')

@@ -1,7 +1,7 @@
 import pytest
 import urllib.parse
+import time
 
-from helper import chromedriver
 from browsermobproxy import Server, Client
 from selenium import webdriver
 
@@ -26,20 +26,41 @@ def browser(request, proxy_server):
     # Устанавливаем прокси сервер
     proxy_url = urllib.parse.urlparse(proxy_server.proxy).path
     options.add_argument('--proxy-server=%s' % proxy_url)
-    driver = webdriver.Chrome(options=options, executable_path=chromedriver())
+    driver = webdriver.Remote(options=options, desired_capabilities={"browserName": "chrome"})
     driver.proxy = proxy_server
     driver.implicitly_wait(5)
     request.addfinalizer(driver.quit)
     return driver
 
 
-def test_proxy(browser):
-    browser.get('https://yandex.ru/')
-    browser.get('https://demo.opencart.com/')
+def test_proxy_login(browser):
     browser.get('https://demo.opencart.com/admin')
     browser.find_element_by_id("input-username").send_keys("admin")
     browser.find_element_by_id("input-password").send_keys("admin")
     browser.find_element_by_tag_name("form").submit()
     har = browser.proxy.har['log']
-    for el in har:
-        print(el)
+    for el in har["entries"]:
+        print(el["request"])
+    browser.close()
+
+
+def test_simple_example(browser):
+    browser.get("https://konflic.github.io/front_example/pages/ajax.html")
+    # Выполняем несколько кликов для ajax запросов
+    browser.find_element_by_name("showjsbutton").click()
+    browser.find_element_by_name("showjsbutton").click()
+    browser.find_element_by_name("showjsbutton").click()
+    time.sleep(2)
+    har = browser.proxy.har['log']
+    for el in har["entries"]:
+        print(el["request"])
+    browser.close()
+
+
+def test_proxy_yandex(browser):
+    browser.get('https://yandex.ru/')
+    time.sleep(2)
+    har = browser.proxy.har['log']
+    for el in har["entries"]:
+        print(el["request"])
+    browser.close()

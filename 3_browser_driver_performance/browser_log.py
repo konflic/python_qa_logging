@@ -1,6 +1,5 @@
 import pytest
 
-from helper import chromedriver
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
@@ -13,8 +12,7 @@ def chrome(request):
     options = webdriver.ChromeOptions()
     options.add_experimental_option('w3c', False)
     caps['loggingPrefs'] = {'performance': 'ALL', 'browser': 'ALL'}
-    wd = webdriver.Chrome(
-        executable_path=chromedriver(),
+    wd = webdriver.Remote(
         desired_capabilities=caps,
         options=options)
     request.addfinalizer(wd.quit)
@@ -29,17 +27,20 @@ def test_logging_browser(chrome):
     driver.execute_script("console.log('Here is the LOG message!')")
     print(driver.log_types)
 
-    # # Логиирование производительности страницы
-    # performance = driver.get_log("performance")
-    # for l in performance:
-    #     print(l)
+    # Логиирование производительности страницы
+    with open("performance.log", "w+") as f:
+        for line in driver.get_log("performance"):
+            f.write(str(line))
+            f.write("\n")
 
-    # # Логи консоли браузера собирает WARNINGS, ERRORS
-    # browser = driver.get_log("browser")
-    # for l in browser:
-    #     print(l)
+    # Логи консоли браузера собирает WARNINGS, ERRORS
+    with open("browser.log", "w+") as f:
+        for line in driver.get_log("browser"):
+            f.write(str(line))
+            f.write("\n")
 
-    # Тоже какое-то логгирование драйвера :)
-    # driver = driver.get_log("driver")
-    # for l in driver:
-    #     print(l)
+    # Локальное логированеи драйвера
+    with open("driver.log", "w+") as f:
+        for line in driver.get_log("driver"):
+            f.write(str(line))
+            f.write("\n")

@@ -3,9 +3,8 @@ import logging
 
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver, AbstractEventListener
-from selenium.webdriver.common.keys import Keys
 
-logging.basicConfig(level=logging.INFO, filename="test.log")
+logging.basicConfig(level=logging.INFO, filename="logs/test.log")
 
 
 class MyListener(AbstractEventListener):
@@ -48,24 +47,22 @@ class MyListener(AbstractEventListener):
 
     def on_exception(self, exception, driver):
         logging.error(f'Oooops i got: {exception}')
-        driver.save_screenshot(f'{exception}.png')
+        driver.save_screenshot(f'logs/{exception}.png')
+
+
+def pytest_addoption(parser):
+    parser.addoption("--browser", action="store", default="chrome")
+    parser.addoption("--executor", action="store", default="127.0.0.1")
 
 
 @pytest.fixture
-def driver(request):
-    options = webdriver.ChromeOptions()
-    options.add_argument("start-maximized")
-    wd = EventFiringWebDriver(webdriver.Chrome(), MyListener())
-    request.addfinalizer(wd.quit)
-    return wd
-
-
-def test_logging(chrome):
-    chrome.get('https://habr.com/en/')
-    chrome.find_element_by_id('search-form-btn').click()
-    find_field = chrome.find_element_by_id('search-form-field')
-    find_field.send_keys('Python')
-    find_field.send_keys(Keys.ENTER)
-    chrome.back()
-    chrome.execute_script("console.log('Wooooohooooo');")
-    chrome.save_screenshot('finish_test.png')
+def browser(request):
+    browser = request.config.getoption("--browser")
+    executor = request.config.getoption("--executor")
+    driver = EventFiringWebDriver(webdriver.Remote(
+        command_executor="http://{}:4444/wd/hub".format(executor),
+        desired_capabilities={"browserName": browser}
+    ), MyListener())
+    def fin(): driver.quit()
+    request.addfinalizer(fin)
+    return driver
