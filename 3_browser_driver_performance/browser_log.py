@@ -44,3 +44,9 @@ def test_logging_browser(chrome):
         for line in driver.get_log("driver"):
             f.write(str(line))
             f.write("\n")
+
+    # Локальное логированеи драйвера
+    with open("server.log", "w+") as f:
+        for line in driver.get_log("server"):
+            f.write(str(line))
+            f.write("\n")

@@ -23,13 +23,20 @@ def browser(request, proxy_server):
     # Избавляемся от ошибок сертификатов
     # https://stackoverflow.com/questions/24507078/how-to-deal-with-certificates-using-selenium
     options.add_argument('--ignore-certificate-errors')
+
     # Устанавливаем прокси сервер
     proxy_url = urllib.parse.urlparse(proxy_server.proxy).path
     options.add_argument('--proxy-server=%s' % proxy_url)
+
     driver = webdriver.Remote(options=options, desired_capabilities={"browserName": "chrome"})
     driver.proxy = proxy_server
     driver.implicitly_wait(5)
-    request.addfinalizer(driver.quit)
+
+    def fin():
+        driver.proxy.close()
+        driver.quit()
+
+    request.addfinalizer(fin)
     return driver
 
 
