@@ -1,8 +1,14 @@
 import logging
+import sys
 
 # Passing name to logger with __name__ variable
-logger = logging.getLogger(__name__)
 
+# logging.basicConfig(level="ERROR", filename="test.log")
+
+logger = logging.getLogger(__name__)
+f = logging.FileHandler(__name__)
+logger.addHandler(f)
+logger.setLevel(logging.DEBUG)
 
 def list_to_dict(l: list):
     res = {}

@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 
 
 class HabrObject(BasePage):
-    SEARCH_BTN = (By.CSS_SELECTOR, "#search-form-btn")
+    SEARCH_BTN = (By.CSS_SELECTOR, "#s")
     SEARCH_FILED = (By.CSS_SELECTOR, "#search-form-field")
     READ_MORE = (By.PARTIAL_LINK_TEXT, "Read more")
     FILTER_BY_RATING = (By.CSS_SELECTOR, '.tabs__level.tabs__level_bottom li:nth-child(3)')

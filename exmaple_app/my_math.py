@@ -1,11 +1,13 @@
 import logging
 
 # Giving module custom name
-logger = logging.getLogger("CustomModuleName")
+logger = logging.getLogger("MathModuleName")
 
 # Add custom file handler
 f = logging.FileHandler(filename="my_math.log")
 logger.addHandler(f)
+logger.setLevel(logging.DEBUG)
+
 
 def super_sum(a, b):
     if b == 0:

@@ -1,7 +1,11 @@
+import os
 import pytest
 import logging
 
 from selenium import webdriver
+
+DRIVERS = os.path.expanduser("~/Downloads/drivers")
+
 logging.basicConfig(level=logging.INFO, filename="logs/selenium.log")
 
 
@@ -19,16 +23,20 @@ def browser(request):
 
     logger.info("===> Test {} started".format(test_name))
 
-    driver = webdriver.Remote(
-        command_executor="http://{}:4444/wd/hub".format(executor),
-        desired_capabilities={"browserName": browser}
-    )
+    if browser == "chrome":
+        driver = webdriver.Chrome(executable_path=f"{DRIVERS}/chromedriver")
+    elif browser == "firefox":
+        driver = webdriver.Firefox(executable_path=f"{DRIVERS}/geckodriver")
+    else:
+        driver = webdriver.Remote(
+            command_executor="http://{}:4444/wd/hub".format(executor),
+            desired_capabilities={"browserName": browser}
+        )
 
     logger.info("Browser {} started with {}".format(browser, driver.desired_capabilities))
 
     def fin():
         driver.quit()
-        logger.info("Browser {} closed".format(browser))
         logger.info("===> Test {} finished".format(test_name))
 
     request.addfinalizer(fin)

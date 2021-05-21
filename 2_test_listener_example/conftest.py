@@ -1,8 +1,11 @@
+import os
 import pytest
 import logging
 
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver, AbstractEventListener
+
+DRIVERS = os.path.expanduser("~/Downloads/drivers")
 
 logging.basicConfig(level=logging.INFO, filename="logs/test.log")
 
@@ -10,7 +13,7 @@ logging.basicConfig(level=logging.INFO, filename="logs/test.log")
 class MyListener(AbstractEventListener):
 
     def before_navigate_to(self, url, driver):
-        logging.info(f"I'm navigating to {url}")
+        logging.info(f"I'm navigating to {url} and {driver.title}")
 
     def after_navigate_to(self, url, driver):
         logging.info(f"I'm on {url}")
@@ -59,10 +62,21 @@ def pytest_addoption(parser):
 def browser(request):
     browser = request.config.getoption("--browser")
     executor = request.config.getoption("--executor")
-    driver = EventFiringWebDriver(webdriver.Remote(
-        command_executor="http://{}:4444/wd/hub".format(executor),
-        desired_capabilities={"browserName": browser}
-    ), MyListener())
-    def fin(): driver.quit()
+
+    if browser == "chrome":
+        driver = webdriver.Chrome(executable_path=f"{DRIVERS}/chromedriver")
+    elif browser == "firefox":
+        driver = webdriver.Firefox(executable_path=f"{DRIVERS}/geckodriver")
+    else:
+        driver = webdriver.Remote(
+            command_executor="http://{}:4444/wd/hub".format(executor),
+            desired_capabilities={"browserName": browser}
+        )
+
+    driver = EventFiringWebDriver(driver, MyListener())
+
+    def fin():
+        driver.quit()
+
     request.addfinalizer(fin)
     return driver

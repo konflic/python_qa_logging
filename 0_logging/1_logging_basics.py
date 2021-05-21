@@ -1,7 +1,6 @@
 import logging
 import argparse
 
-# Передача параметров через командную строку
 parser = argparse.ArgumentParser()
 parser.add_argument("-l", "--log", type=str, default="WARNING")
 parser.add_argument("-f", "--file", default=None)
