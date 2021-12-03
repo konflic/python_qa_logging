@@ -1,4 +1,4 @@
-from HabrObject import HabrObject
+from log_selenium_1.HabrObject import HabrObject
 
 
 def test_post_open(browser):
@@ -16,5 +16,5 @@ def test_hubs_open(browser):
     page.open("https://habr.com/en")
     page.click_search()
     page.search('Python')
-    page.select_hubs_and_companies()
+    page.select_hubs()
     page.is_present(page.HUBS)
