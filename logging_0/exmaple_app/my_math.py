@@ -1,7 +1,7 @@
 import logging
 
 # Giving module custom name
-logger = logging.getLogger("MathModuleName")
+logger = logging.getLogger(__name__)
 
 # Add custom file handler
 f = logging.FileHandler(filename="my_math.log")

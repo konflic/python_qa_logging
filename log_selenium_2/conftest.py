@@ -50,7 +50,7 @@ class MyListener(AbstractEventListener):
 
     def on_exception(self, exception, driver):
         logging.error(f'Oooops i got: {exception}')
-        driver.save_screenshot(f'logs/{exception}.png')
+        driver.save_screenshot(f'logs/{driver.session_id}.png')
 
 
 def pytest_addoption(parser):

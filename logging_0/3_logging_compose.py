@@ -1,7 +1,7 @@
 import logging
 import time
 
-from exmaple_app import my_module, my_math
+from logging_0.exmaple_app import my_module, my_math
 
 # logging.basicConfig(level=logging.INFO) #  Control output
 logger = logging.getLogger(__name__)

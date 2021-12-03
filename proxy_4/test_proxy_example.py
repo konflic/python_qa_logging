@@ -86,4 +86,6 @@ def test_proxy_yandex(browser):
     with open("yandex.log", "w+") as f:
         for el in har["entries"]:
             f.write(str(el["request"]) + "\n")
+            f.write(str(el["response"]) + "\n")
+            print()
     browser.close()

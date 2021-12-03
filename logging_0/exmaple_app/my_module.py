@@ -4,9 +4,9 @@ import sys
 # Passing name to logger with __name__ variable
 
 # logging.basicConfig(level="ERROR", filename="test.log")
-
 logger = logging.getLogger(__name__)
-f = logging.FileHandler(__name__)
+
+f = logging.FileHandler("my_module.log")
 logger.addHandler(f)
 logger.setLevel(logging.DEBUG)
 
