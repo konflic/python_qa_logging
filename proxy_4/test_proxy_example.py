@@ -1,3 +1,5 @@
+import json
+
 import pytest
 import urllib.parse
 import time
@@ -44,15 +46,20 @@ def browser(request, proxy_server):
     return driver
 
 
+def dump_log_to_json(har_log, file_name):
+    logs = []
+    with open(file_name, "w+") as f:
+        for i, el in enumerate(har_log["entries"], start=1):
+            logs.append({i: {"request": el["request"], "response": el["response"]}})
+        f.write(json.dumps(logs))
+
+
 def test_proxy_login(browser):
     browser.get('https://demo.opencart.com/admin')
     browser.find_element_by_id("input-username").send_keys("admin")
     browser.find_element_by_id("input-password").send_keys("admin")
     browser.find_element_by_tag_name("form").submit()
-    har = browser.proxy.har['log']
-    with open("open_cart_login.log", "w+") as f:
-        for el in har["entries"]:
-            f.write(str(el["request"]) + "\n")
+    dump_log_to_json(browser.proxy.har['log'], "open_cart_login.json")
     browser.close()
 
 
@@ -65,13 +72,7 @@ def test_simple_example(browser):
     time.sleep(1)
     browser.find_element_by_name("showjsbutton").click()
     time.sleep(5)
-
-    har = browser.proxy.har['log']
-
-    with open("ajax_requests.log", "w+") as f:
-        for el in har["entries"]:
-            f.write(str(el["request"]) + "\n")
-
+    dump_log_to_json(browser.proxy.har['log'], "ajax_requests.json")
     browser.close()
 
 
@@ -79,13 +80,6 @@ def test_proxy_yandex(browser):
     browser.get('https://yandex.ru/')
     browser.find_element_by_id("text").send_keys("test")
     browser.find_element_by_id("text").submit()
-
     time.sleep(2)
-    har = browser.proxy.har['log']
-
-    with open("yandex.log", "w+") as f:
-        for el in har["entries"]:
-            f.write(str(el["request"]) + "\n")
-            f.write(str(el["response"]) + "\n")
-            print()
+    dump_log_to_json(browser.proxy.har['log'], "yandex.json")
     browser.close()
