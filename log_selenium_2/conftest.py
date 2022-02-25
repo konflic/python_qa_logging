@@ -56,12 +56,14 @@ class MyListener(AbstractEventListener):
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
     parser.addoption("--executor", action="store", default="127.0.0.1")
+    parser.addoption("--log_level", action="store", default="DEBUG")
 
 
 @pytest.fixture
 def browser(request):
     browser = request.config.getoption("--browser")
     executor = request.config.getoption("--executor")
+    log_level = request.config.getoption("--log_level")
 
     if browser == "chrome":
         driver = webdriver.Chrome(executable_path=f"{DRIVERS}/chromedriver")
@@ -74,6 +76,8 @@ def browser(request):
         )
 
     driver = EventFiringWebDriver(driver, MyListener())
+    driver.test_name =  request.node.name
+    driver.log_level = log_level
 
     def fin():
         driver.quit()

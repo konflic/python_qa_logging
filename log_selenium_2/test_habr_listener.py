@@ -6,7 +6,6 @@ def test_post_open(browser):
     page.open("https://habr.com/en")
     page.click_search()
     page.search('Python')
-    page.filter_by_rating()
     page.read_more()
     page.is_present(page.POST_BODY)
 
