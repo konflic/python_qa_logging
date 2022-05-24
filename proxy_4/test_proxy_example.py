@@ -68,7 +68,7 @@ def test_simple_example(browser):
     browser.find_element_by_name("showjsbutton").click()
     time.sleep(1)
     browser.find_element_by_name("showjsbutton").click()
-    time.sleep(5)
+    time.sleep(1)
     dump_log_to_json(browser.proxy.har['log'], "ajax_requests.json")
     browser.close()
 

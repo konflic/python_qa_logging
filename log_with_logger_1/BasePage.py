@@ -12,8 +12,12 @@ class BasePage:
         self.driver = driver
         self.wait = WebDriverWait(driver, wait)
         self.actions = ActionChains(driver)
+
+        # First
         self.logger = logging.getLogger(type(self).__name__)
-        self.logger.addHandler(logging.FileHandler(f"logs/{self.driver.test_name}.log"))
+        file_handler = logging.FileHandler(f"logs/{self.driver.test_name}.log")
+        file_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+        self.logger.addHandler(file_handler)
         self.logger.setLevel(level=self.driver.log_level)
 
     def open(self, url):

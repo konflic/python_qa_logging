@@ -1,4 +1,5 @@
 import json
+import time
 
 import pytest
 import os
@@ -7,14 +8,13 @@ from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 DRIVERS = os.path.expanduser("~/Downloads/drivers")
-
-
 # https://github.com/SeleniumHQ/selenium/wiki/Logging
 
 @pytest.fixture
 def driver(request):
     caps = DesiredCapabilities.CHROME
     options = webdriver.ChromeOptions()
+
     options.add_experimental_option('w3c', False)
     caps['loggingPrefs'] = {
         'performance': 'ALL',
@@ -30,11 +30,13 @@ def driver(request):
 
 
 def test_logging_browser(driver):
-    driver.get('https://ya.ru/')
+    driver.get('https://yandex.ru/')
+
     driver.execute_script("console.warn('Here is the WARNING message!')")
     driver.execute_script("console.error('Here is the ERROR message!')")
     driver.execute_script("console.log('Here is the LOG message!')")
     driver.execute_script("console.info('Here is the INFO message!')")
+
     print(driver.log_types)
 
     # Логиирование производительности страницы

@@ -2,27 +2,24 @@ import logging
 import sys
 
 # Passing name to logger with __name__ variable
-
-# logging.basicConfig(level="ERROR", filename="test.log")
 logger = logging.getLogger(__name__)
 
-f = logging.FileHandler("my_module.log")
-logger.addHandler(f)
+file_handler = logging.FileHandler('example.log')
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+logger.addHandler(file_handler)
 logger.setLevel(logging.DEBUG)
+
 
 def list_to_dict(l: list):
     res = {}
 
     logger.error('This is example error')
-
     logger.info('Creating dict from list {}'.format(l))
 
     for el in l:
 
         logger.debug('Adding {} as a key to dict'.format(str(el)))
-
         res[str(el)] = el
-
         logger.debug('Current dict is {}'.format(res))
 
     logger.info('Creating dict finished'.format(l))

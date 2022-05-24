@@ -3,11 +3,10 @@ import logging
 # Giving module custom name
 logger = logging.getLogger(__name__)
 
-# Add custom file handler
-f = logging.FileHandler(filename="my_math.log")
-logger.addHandler(f)
+file_handler = logging.FileHandler('example.log')
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+logger.addHandler(file_handler)
 logger.setLevel(logging.DEBUG)
-
 
 def super_sum(a, b):
 
