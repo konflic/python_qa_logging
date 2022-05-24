@@ -1,13 +1,13 @@
 import logging
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-l", "--log", type=str, default="WARNING")
-parser.add_argument("-f", "--file", default=None)
-args = parser.parse_args()
-
-# Если не указываем файл передаем в stdout
-logging.basicConfig(filename=args.file, level=args.log)
+# parser = argparse.ArgumentParser()
+# parser.add_argument("-l", "--log", type=str, default="WARNING")
+# parser.add_argument("-f", "--file", default=None)
+# args = parser.parse_args()
+#
+# # Если не указываем файл передаем в stdout
+logging.basicConfig(level=logging.DEBUG, filename="example.log", format='%(asctime)s %(levelname)s %(filename)s %(message)s')
 
 # Уровень по умолчанию WARNING
 logging.debug('This is a debug message')

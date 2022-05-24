@@ -7,31 +7,31 @@ from selenium.webdriver.support.events import EventFiringWebDriver, AbstractEven
 
 DRIVERS = os.path.expanduser("~/Downloads/drivers")
 
-logging.basicConfig(level=logging.INFO, filename="logs/test.log")
-
+# logging.basicConfig(level=logging.INFO, filename="logs/test.log")
+logger = logging.getLogger(__name__)
 
 class MyListener(AbstractEventListener):
 
     def before_navigate_to(self, url, driver):
-        logging.info(f"I'm navigating to {url} and {driver.title}")
+        logger.info(f"I'm navigating to {url} and {driver.title}")
 
     def after_navigate_to(self, url, driver):
-        logging.info(f"I'm on {url}")
+        logger.info(f"I'm on {url}")
 
     def before_navigate_back(self, driver):
-        logging.info(f"I'm navigating back")
+        logger.info(f"I'm navigating back")
 
     def after_navigate_back(self, driver):
-        logging.info(f"I'm back!")
+        logger.info(f"I'm back!")
 
     def before_find(self, by, value, driver):
-        logging.info(f"I'm looking for '{value}' with '{by}'")
+        logger.info(f"I'm looking for '{value}' with '{by}'")
 
     def after_find(self, by, value, driver):
-        logging.info(f"I've found '{value}' with '{by}'")
+        logger.info(f"I've found '{value}' with '{by}'")
 
     def before_click(self, element, driver):
-        logging.info(f"I'm clicking {element}")
+        logger.info(f"I'm clicking {element}")
 
     def after_click(self, element, driver):
         logging.info(f"I've clicked {element}")
@@ -40,17 +40,17 @@ class MyListener(AbstractEventListener):
         logging.info(f"I'm executing '{script}'")
 
     def after_execute_script(self, script, driver):
-        logging.info(f"I've executed '{script}'")
+        logger.info(f"I've executed '{script}'")
 
     def before_quit(self, driver):
-        logging.info(f"I'm getting ready to terminate {driver}")
+        logger.info(f"I'm getting ready to terminate {driver}")
 
     def after_quit(self, driver):
-        logging.info(f"WASTED!!!")
+        logger.info(f"Driver Quit")
 
-    def on_exception(self, exception, driver):
-        logging.error(f'Oooops i got: {exception}')
-        driver.save_screenshot(f'logs/{driver.session_id}.png')
+    # def on_exception(self, exception, driver):
+    #     logger.error(f'Oooops i got: {exception}')
+    #     driver.save_screenshot(f'logs/{driver.session_id}.png')
 
 
 def pytest_addoption(parser):

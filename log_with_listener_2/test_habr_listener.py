@@ -1,4 +1,4 @@
-from log_selenium_1.HabrObject import HabrObject
+from log_with_listener_2.HabrObject import HabrObject
 
 
 def test_post_open(browser):

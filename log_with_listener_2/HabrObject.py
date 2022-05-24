@@ -1,4 +1,4 @@
-from log_selenium_1.BasePage import BasePage
+from log_with_logger.BasePage import BasePage
 from selenium.webdriver.common.by import By
 
 

@@ -28,13 +28,10 @@ def browser(request, proxy_server):
     # Избавляемся от ошибок сертификатов
     # https://stackoverflow.com/questions/24507078/how-to-deal-with-certificates-using-selenium
     options.add_argument('--ignore-certificate-errors')
-
     # Устанавливаем прокси сервер
     proxy_url = urllib.parse.urlparse(proxy_server.proxy).path
-    options.add_argument('--proxy-server=%s' % proxy_url)
-
+    options.add_argument(f'--proxy-server={proxy_url}')
     driver = webdriver.Chrome(executable_path=f"{DRIVERS}/chromedriver", options=options)
-
     driver.proxy = proxy_server
     driver.implicitly_wait(5)
 
@@ -64,7 +61,7 @@ def test_proxy_login(browser):
 
 
 def test_simple_example(browser):
-    browser.get("https://konflic.github.io/front_example/pages/ajax.html")
+    browser.get("https://konflic.github.io/examples/pages/ajax.html")
     # Выполняем несколько кликов для ajax запросов
     browser.find_element_by_name("showjsbutton").click()
     time.sleep(1)
