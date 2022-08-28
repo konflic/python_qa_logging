@@ -15,12 +15,11 @@ def driver(request):
     caps = DesiredCapabilities.CHROME
     options = webdriver.ChromeOptions()
 
-    options.add_experimental_option('w3c', False)
-    caps['loggingPrefs'] = {
-        'performance': 'ALL',
+    caps['goog:loggingPrefs'] = {
         'browser': 'ALL',
-        'driver': 'ALL'
+        'performance': 'ALL',
     }
+
     _driver = webdriver.Chrome(executable_path=f"{DRIVERS}/chromedriver",
                                desired_capabilities=caps,
                                options=options)
@@ -52,10 +51,3 @@ def test_logging_browser(driver):
         browser_logs.append(line)
     with open("browser.json", "w+") as f:
         f.write(json.dumps(browser_logs))
-
-    # Локальное логированеи драйвера
-    driver_logs = []
-    for line in driver.get_log("driver"):
-        driver_logs.append(line)
-    with open("driver.json", "w+") as f:
-        f.write(json.dumps(driver_logs))

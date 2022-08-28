@@ -1,12 +1,12 @@
 import json
 
 import pytest
-import urllib.parse
 import time
 import os
 
 from browsermobproxy import Server, Client
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 DRIVERS = os.path.expanduser("~/Downloads/drivers")
 
@@ -16,6 +16,9 @@ def proxy_server(request):
     server = Server("browsermob-proxy/bin/browsermob-proxy")
     server.start()
     client = Client("localhost:8080")
+
+    client.rewrite_url("https://my-api-examaple\\.herokuapp\\.com.*", "/some/new/path")
+
     server.create_proxy()
     request.addfinalizer(server.stop)
     client.new_har()
@@ -26,12 +29,17 @@ def proxy_server(request):
 def browser(request, proxy_server):
     options = webdriver.ChromeOptions()
     # Избавляемся от ошибок сертификатов
-    # https://stackoverflow.com/questions/24507078/how-to-deal-with-certificates-using-selenium
-    options.add_argument('--ignore-certificate-errors')
+    options.accept_insecure_certs = True
+
     # Устанавливаем прокси сервер
-    proxy_url = urllib.parse.urlparse(proxy_server.proxy).path
-    options.add_argument(f'--proxy-server={proxy_url}')
-    driver = webdriver.Chrome(executable_path=f"{DRIVERS}/chromedriver", options=options)
+    caps = {}
+    proxy_server.add_to_webdriver_capabilities(caps)
+    driver = webdriver.Chrome(
+        executable_path=f"{DRIVERS}/chromedriver",
+        options=options,
+        desired_capabilities=caps
+    )
+
     driver.proxy = proxy_server
     driver.implicitly_wait(5)
 
@@ -53,9 +61,9 @@ def dump_log_to_json(har_log, file_name):
 
 def test_proxy_login(browser):
     browser.get('https://demo.opencart.com/admin')
-    browser.find_element_by_id("input-username").send_keys("admin")
-    browser.find_element_by_id("input-password").send_keys("admin")
-    browser.find_element_by_tag_name("form").submit()
+    browser.find_element(value="input-username").send_keys("admin")
+    browser.find_element(value="input-password").send_keys("admin")
+    browser.find_element(By.TAG_NAME, "form").submit()
     dump_log_to_json(browser.proxy.har['log'], "open_cart_login.json")
     browser.close()
 
@@ -63,11 +71,11 @@ def test_proxy_login(browser):
 def test_simple_example(browser):
     browser.get("https://konflic.github.io/examples/pages/ajax.html")
     # Выполняем несколько кликов для ajax запросов
-    browser.find_element_by_name("showjsbutton").click()
+    browser.find_element(By.NAME, "showjsbutton").click()
     time.sleep(1)
-    browser.find_element_by_name("showjsbutton").click()
+    browser.find_element(By.NAME, "showjsbutton").click()
     time.sleep(1)
-    browser.find_element_by_name("showjsbutton").click()
+    browser.find_element(By.NAME, "showjsbutton").click()
     time.sleep(1)
     dump_log_to_json(browser.proxy.har['log'], "ajax_requests.json")
     browser.close()
@@ -75,8 +83,8 @@ def test_simple_example(browser):
 
 def test_proxy_yandex(browser):
     browser.get('https://yandex.ru/')
-    browser.find_element_by_id("text").send_keys("test")
-    browser.find_element_by_id("text").submit()
+    browser.find_element(value="text").send_keys("test")
+    browser.find_element(value="text").submit()
     time.sleep(2)
     dump_log_to_json(browser.proxy.har['log'], "yandex.json")
     browser.close()

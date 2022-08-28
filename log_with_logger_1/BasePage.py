@@ -16,7 +16,7 @@ class BasePage:
         # First
         self.logger = logging.getLogger(type(self).__name__)
         file_handler = logging.FileHandler(f"logs/{self.driver.test_name}.log")
-        file_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+        file_handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
         self.logger.addHandler(file_handler)
         self.logger.setLevel(level=self.driver.log_level)
 
