@@ -1,6 +1,7 @@
 import os
 import pytest
 import logging
+import uuid
 
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver, AbstractEventListener
@@ -17,6 +18,9 @@ def pytest_addoption(parser):
     parser.addoption("--executor", action="store", default="127.0.0.1")
     parser.addoption("--log_level", action="store", default="DEBUG")
 
+log_map = {
+    "DEBUG": logging.DEBUG
+}
 
 @pytest.fixture
 def browser(request):
@@ -24,12 +28,12 @@ def browser(request):
     executor = request.config.getoption("--executor")
     log_level = request.config.getoption("--log_level")
 
-    class MyListener(AbstractEventListener):
+    class WebdriverListener(AbstractEventListener):
         logger = logging.getLogger(request.node.name)
         logger.setLevel(logging.INFO)
         ch = logging.FileHandler(filename=f"logs/{request.node.name}.log")
-        ch.setLevel(logging.DEBUG)
         ch.setFormatter(logging.Formatter('%(name)s:%(levelname)s %(message)s'))
+        ch.setLevel(log_map[log_level])
         logger.addHandler(ch)
 
         def before_navigate_to(self, url, driver):
@@ -82,7 +86,7 @@ def browser(request):
             desired_capabilities={"browserName": browser}
         )
 
-    driver = EventFiringWebDriver(driver, MyListener())
+    driver = EventFiringWebDriver(driver, WebdriverListener())
     driver.test_name = request.node.name
     driver.log_level = log_level
 

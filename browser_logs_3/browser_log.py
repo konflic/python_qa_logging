@@ -18,6 +18,7 @@ def driver(request):
     caps['goog:loggingPrefs'] = {
         'browser': 'ALL',
         'performance': 'ALL',
+        'driver': 'ALL'
     }
 
     _driver = webdriver.Chrome(executable_path=f"{DRIVERS}/chromedriver",
@@ -39,15 +40,11 @@ def test_logging_browser(driver):
     print(driver.log_types)
 
     # Логиирование производительности страницы
-    performance_logs = []
-    for line in driver.get_log("performance"):
-        performance_logs.append(line)
     with open("performance.json", "w+") as f:
-        f.write(json.dumps(performance_logs))
+        f.write(json.dumps(driver.get_log("performance"), indent=4, ensure_ascii=False))
 
-    # Логи консоли браузера собирает WARNINGS, ERRORS
-    browser_logs = []
-    for line in driver.get_log("browser"):
-        browser_logs.append(line)
     with open("browser.json", "w+") as f:
-        f.write(json.dumps(browser_logs))
+        f.write(json.dumps(driver.get_log("browser"), indent=4, ensure_ascii=False))
+
+    with open("driver.json", "w+") as f:
+        f.write(json.dumps(driver.get_log("driver"), indent=4, ensure_ascii=False))

@@ -17,7 +17,7 @@ def proxy_server(request):
     server.start()
     client = Client("localhost:8080")
 
-    client.rewrite_url("https://my-api-examaple\\.herokuapp\\.com.*", "/some/new/path")
+    client.rewrite_url("https://yandex.ru/clck/safeclick.*", "/some/new/path")
 
     server.create_proxy()
     request.addfinalizer(server.stop)
@@ -34,6 +34,9 @@ def browser(request, proxy_server):
     # Устанавливаем прокси сервер
     caps = {}
     proxy_server.add_to_webdriver_capabilities(caps)
+
+    print(caps)
+
     driver = webdriver.Chrome(
         executable_path=f"{DRIVERS}/chromedriver",
         options=options,
@@ -56,7 +59,7 @@ def dump_log_to_json(har_log, file_name):
     with open(file_name, "w+") as f:
         for i, el in enumerate(har_log["entries"], start=1):
             logs.append({i: {"request": el["request"], "response": el["response"]}})
-        f.write(json.dumps(logs))
+        f.write(json.dumps(logs, indent=4, ensure_ascii=False))
 
 
 def test_proxy_login(browser):
@@ -64,27 +67,28 @@ def test_proxy_login(browser):
     browser.find_element(value="input-username").send_keys("admin")
     browser.find_element(value="input-password").send_keys("admin")
     browser.find_element(By.TAG_NAME, "form").submit()
+    time.sleep(5)
     dump_log_to_json(browser.proxy.har['log'], "open_cart_login.json")
     browser.close()
 
 
-def test_simple_example(browser):
-    browser.get("https://konflic.github.io/examples/pages/ajax.html")
-    # Выполняем несколько кликов для ajax запросов
-    browser.find_element(By.NAME, "showjsbutton").click()
-    time.sleep(1)
-    browser.find_element(By.NAME, "showjsbutton").click()
-    time.sleep(1)
-    browser.find_element(By.NAME, "showjsbutton").click()
-    time.sleep(1)
-    dump_log_to_json(browser.proxy.har['log'], "ajax_requests.json")
-    browser.close()
+# def test_simple_example(browser):
+#     browser.get("https://konflic.github.io/examples/pages/ajax.html")
+#     # Выполняем несколько кликов для ajax запросов
+#     browser.find_element(By.NAME, "showjsbutton").click()
+#     time.sleep(1)
+#     browser.find_element(By.NAME, "showjsbutton").click()
+#     time.sleep(1)
+#     browser.find_element(By.NAME, "showjsbutton").click()
+#     time.sleep(1)
+#     dump_log_to_json(browser.proxy.har['log'], "ajax_requests.json")
+#     browser.close()
 
 
 def test_proxy_yandex(browser):
-    browser.get('https://yandex.ru/')
+    browser.get('https://ya.ru/')
     browser.find_element(value="text").send_keys("test")
     browser.find_element(value="text").submit()
-    time.sleep(2)
+    time.sleep(5)
     dump_log_to_json(browser.proxy.har['log'], "yandex.json")
     browser.close()
