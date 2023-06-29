@@ -12,24 +12,19 @@ class BasePage:
         self.driver = driver
         self.wait = WebDriverWait(driver, wait)
         self.actions = ActionChains(driver)
-
-        # First
-        self.logger = logging.getLogger(type(self).__name__)
-        file_handler = logging.FileHandler(f"logs/{self.driver.test_name}.log")
-        file_handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
-        self.logger.addHandler(file_handler)
-        self.logger.setLevel(level=self.driver.log_level)
+        self.logger = driver.logger
+        self.class_name = type(self).__name__
 
     def open(self, url):
-        self.logger.info("Opening url: {}".format(url))
+        self.logger.info("%s: Opening url: %s" % (self.class_name, url))
         self.driver.get(url)
 
     def click(self, locator):
-        self.logger.info("Clicking element: {}".format(locator))
+        self.logger.info("%s: Clicking element: %s" % (self.class_name, str(locator)))
         self.wait.until(EC.element_to_be_clickable(locator)).click()
 
     def input_and_submit(self, locator, value):
-        self.logger.info("Input {} in input {}".format(value, locator))
+        self.logger.info("%s: Input %s in input %s" % (self.class_name, value, locator))
         find_field = self.wait.until(EC.presence_of_element_located(locator))
         find_field.click()
         find_field.clear()
@@ -37,5 +32,5 @@ class BasePage:
         find_field.send_keys(Keys.ENTER)
 
     def is_present(self, locator):
-        self.logger.info("Check if element {} is present".format(locator))
+        self.logger.info("%s: Check if element %s is present" % (self.class_name, str(locator)))
         return self.wait.until(EC.visibility_of_element_located(locator))
