@@ -18,9 +18,7 @@ def pytest_addoption(parser):
 @pytest.fixture
 def browser(request):
     browser = request.config.getoption("--browser")
-    executor = request.config.getoption("--executor")
     log_level = request.config.getoption("--log_level")
-
 
 
     logger = logging.getLogger(request.node.name)
@@ -32,14 +30,9 @@ def browser(request):
     logger.info("===> Test %s started at %s" % (request.node.name, datetime.datetime.now()))
 
     if browser == "chrome":
-        driver = webdriver.Chrome(executable_path=f"{DRIVERS}/chromedriver")
+        driver = webdriver.Chrome()
     elif browser == "firefox":
-        driver = webdriver.Firefox(executable_path=f"{DRIVERS}/geckodriver")
-    else:
-        driver = webdriver.Remote(
-            command_executor="http://{}:4444/wd/hub".format(executor),
-            desired_capabilities={"browserName": browser}
-        )
+        driver = webdriver.Firefox()
 
     driver.log_level = log_level
     driver.logger = logger
