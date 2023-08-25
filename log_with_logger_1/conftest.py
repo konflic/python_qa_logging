@@ -6,6 +6,8 @@ import pytest
 import logging
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeServise
+from selenium.webdriver.firefox.service import Service as FirefoxService
 
 DRIVERS = os.path.expanduser("~/Downloads/drivers")
 
@@ -30,9 +32,11 @@ def browser(request):
     logger.info("===> Test %s started at %s" % (request.node.name, datetime.datetime.now()))
 
     if browser == "chrome":
-        driver = webdriver.Chrome()
+        service = ChromeServise()
+        driver = webdriver.Chrome(service=service)
     elif browser == "firefox":
-        driver = webdriver.Firefox()
+        service = FirefoxService()
+        driver = webdriver.Firefox(service=service)
 
     driver.log_level = log_level
     driver.logger = logger

@@ -13,7 +13,6 @@ DRIVERS = os.path.expanduser("~/Downloads/drivers")
 
 @pytest.fixture
 def driver(request):
-    caps = DesiredCapabilities.CHROME
     options = webdriver.ChromeOptions()
 
     options.set_capability('goog:loggingPrefs', {
