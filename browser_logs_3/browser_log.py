@@ -9,12 +9,13 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 DRIVERS = os.path.expanduser("~/Downloads/drivers")
+
+
 # https://github.com/SeleniumHQ/selenium/wiki/Logging
 
 @pytest.fixture
 def driver(request):
     options = webdriver.ChromeOptions()
-
     options.set_capability('goog:loggingPrefs', {
         'browser': 'ALL',
         'performance': 'ALL',
@@ -29,6 +30,7 @@ def driver(request):
 
 def test_logging_browser(driver):
     driver.get('https://demo.opencart.com/')
+    driver.get('https://demo.opencart.com/admin')
 
     driver.execute_script("console.warn('Here is the WARNING message!')")
     driver.execute_script("console.error('Here is the ERROR message!')")
@@ -50,6 +52,7 @@ def test_logging_browser(driver):
                     "Network.response" in log["method"]
                     or "Network.request" in log["method"]
                     or "Network.webSocket" in log["method"]
+                    or "Network.dataReceived" in log["method"]
             ):
                 data.append(log)
         with open("logs/network.json", "w+") as f:

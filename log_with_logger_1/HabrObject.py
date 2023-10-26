@@ -17,9 +17,11 @@ class HabrObject(BasePage):
         self.input_and_submit(self.SEARCH_FILED, request)
 
     def read_more(self):
+        self.logger.info("Click 'READ MORE' link")
         self.click(self.READ_MORE)
 
     def click_search(self):
+        self.logger.info("Click 'SEARCH' element")
         self.click(self.SEARCH_ICON)
 
     def select_hubs(self):

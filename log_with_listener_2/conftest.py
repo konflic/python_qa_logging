@@ -16,10 +16,11 @@ DRIVERS = os.path.expanduser("~/Downloads/drivers")
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
     parser.addoption("--executor", action="store", default="127.0.0.1")
-    parser.addoption("--log_level", action="store", default="DEBUG")
+    parser.addoption("--log_level", action="store", default="INFO")
 
 log_map = {
-    "DEBUG": logging.DEBUG
+    "DEBUG": logging.DEBUG,
+    "INFO": logging.INFO
 }
 
 @pytest.fixture
@@ -72,19 +73,14 @@ def browser(request):
         def after_quit(self, driver):
             self.logger.info(f"Driver Quit")
 
-        # def on_exception(self, exception, driver):
-        #     logger.error(f'Oooops i got: {exception}')
-        #     driver.save_screenshot(f'logs/{driver.session_id}.png')
+        def on_exception(self, exception, driver):
+            self.logger.error(f'Oooops i got: {exception}')
+            driver.save_screenshot(f'logs/{uuid.uuid4()}.png')
 
     if browser == "chrome":
-        driver = webdriver.Chrome(executable_path=f"{DRIVERS}/chromedriver")
+        driver = webdriver.Chrome()
     elif browser == "firefox":
-        driver = webdriver.Firefox(executable_path=f"{DRIVERS}/geckodriver")
-    else:
-        driver = webdriver.Remote(
-            command_executor="http://{}:4444/wd/hub".format(executor),
-            desired_capabilities={"browserName": browser}
-        )
+        driver = webdriver.Firefox()
 
     driver = EventFiringWebDriver(driver, WebdriverListener())
     driver.test_name = request.node.name

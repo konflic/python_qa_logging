@@ -14,7 +14,7 @@ DRIVERS = os.path.expanduser("~/Downloads/drivers")
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
     parser.addoption("--executor", action="store", default="127.0.0.1")
-    parser.addoption("--log_level", action="store", default="DEBUG")
+    parser.addoption("--log_level", action="store", default="INFO")
 
 # TODO: Задизайнить через общий logger
 @pytest.fixture
