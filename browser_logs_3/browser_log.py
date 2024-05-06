@@ -43,7 +43,7 @@ def test_logging_browser(driver):
     # with open("logs/performance.json", "w+") as f:
     #     f.write(json.dumps(driver.get_log("performance"), indent=4, ensure_ascii=False))
 
-    with open("logs/network.json", "w+") as f:
+    with open("network.json", "w+") as f:
         logs = driver.get_log("performance")
         data = []
         for entry in logs:
@@ -55,11 +55,10 @@ def test_logging_browser(driver):
                     or "Network.dataReceived" in log["method"]
             ):
                 data.append(log)
-        with open("logs/network.json", "w+") as f:
-            f.write(json.dumps(data, indent=4, ensure_ascii=False))
+        f.write(json.dumps(data, indent=4, ensure_ascii=False))
 
-    with open("logs/browser.json", "w+") as f:
+    with open("browser.json", "w+") as f:
         f.write(json.dumps(driver.get_log("browser"), indent=4, ensure_ascii=False))
 
-    with open("logs/driver.json", "w+") as f:
+    with open("driver.json", "w+") as f:
         f.write(json.dumps(driver.get_log("driver"), indent=4, ensure_ascii=False))
