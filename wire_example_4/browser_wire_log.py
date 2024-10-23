@@ -21,7 +21,6 @@ def driver(request):
 
 def test_logging_browser(driver):
     driver.get('https://www.google.com/search?q=lk')
-    time.sleep(2)
 
-    with open("logs/network.har", "w+") as f:
+    with open("logs/network.json", "w+") as f:
         f.write(driver.har)
