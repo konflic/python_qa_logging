@@ -29,7 +29,7 @@ def browser(request):
     logger.addHandler(file_handler)
     logger.setLevel(level=log_level)
 
-    logger.info("===> Test %s started at %s" % (request.node.name, datetime.datetime.now()))
+    logger.info("===> Test started at %s" % datetime.datetime.now())
 
     if browser == "chrome":
         service = ChromeServise()
@@ -46,7 +46,7 @@ def browser(request):
 
     def fin():
         driver.quit()
-        logger.info("===> Test %s finished at %s" % (request.node.name, datetime.datetime.now()))
+        logger.info("===> Test finished at %s" % datetime.datetime.now())
 
     request.addfinalizer(fin)
     return driver

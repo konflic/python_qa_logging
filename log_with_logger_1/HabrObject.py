@@ -14,19 +14,22 @@ class HabrObject(BasePage):
     TAB_HUBS_AND_COMPANIES = (By.XPATH, "//h3[contains(text(), 'Hubs')]")
 
     def search(self, request):
+        self.logger.info(f"{self.class_name}: Search for {request}")
         self.input_and_submit(self.SEARCH_FILED, request)
 
     def read_more(self):
-        self.logger.info("Click 'READ MORE' link")
+        self.logger.info(f"{self.class_name}: Click 'READ MORE' link")
         self.click(self.READ_MORE)
 
     def click_search(self):
-        self.logger.info("Click 'SEARCH' element")
+        self.logger.info(f"{self.class_name}: Click 'SEARCH' element")
         self.click(self.SEARCH_ICON)
 
     def select_hubs(self):
+        self.logger.info(f"{self.class_name}: Selecting Hubs tab")
         self.click(self.TAB_HUBS)
 
     def filter_by_rating(self):
+        self.logger.info(f"{self.class_name}: Filtering search result by rating")
         self.click(self.FILTERS_DROPDOWN)
         self.click(self.FILTER_BY_RATING)

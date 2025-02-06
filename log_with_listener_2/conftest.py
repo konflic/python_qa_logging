@@ -29,7 +29,7 @@ def browser(request):
     executor = request.config.getoption("--executor")
     log_level = request.config.getoption("--log_level")
 
-    class WebdriverListener(AbstractEventListener):
+    class MyListener(AbstractEventListener):
         logger = logging.getLogger(request.node.name)
         logger.setLevel(logging.INFO)
         ch = logging.FileHandler(filename=f"logs/{request.node.name}.log")
@@ -38,7 +38,7 @@ def browser(request):
         logger.addHandler(ch)
 
         def before_navigate_to(self, url, driver):
-            self.logger.info(f"I'm navigating to {url} and {driver.title}")
+            self.logger.info(f"I'm navigating to {url}")
 
         def after_navigate_to(self, url, driver):
             self.logger.info(f"I'm on {url}")
@@ -56,7 +56,7 @@ def browser(request):
             self.logger.info(f"I've found '{value}' with '{by}'")
 
         def before_click(self, element, driver):
-            self.logger.info(f"I'm clicking {element}")
+            self.logger.info(f"I'm clicking found element")
 
         def after_click(self, element, driver):
             self.logger.info(f"I've clicked {element}")
@@ -82,7 +82,7 @@ def browser(request):
     elif browser == "firefox":
         driver = webdriver.Firefox()
 
-    driver = EventFiringWebDriver(driver, WebdriverListener())
+    driver = EventFiringWebDriver(driver, MyListener())
     driver.test_name = request.node.name
     driver.log_level = log_level
 

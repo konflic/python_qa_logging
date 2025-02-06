@@ -1,5 +1,3 @@
-import logging
-
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 import selenium.webdriver.support.expected_conditions as EC
@@ -16,7 +14,7 @@ class BasePage:
         self.class_name = type(self).__name__
 
     def open(self, url):
-        self.logger.debug("%s: Opening url: %s" % (self.class_name, url))
+        self.logger.info("%s: Opening url: %s" % (self.class_name, url))
         self.driver.get(url)
 
     def click(self, locator):
@@ -32,5 +30,5 @@ class BasePage:
         find_field.send_keys(Keys.ENTER)
 
     def is_present(self, locator):
-        self.logger.debug("%s: Check if element %s is present" % (self.class_name, str(locator)))
+        self.logger.info("%s: Check if element %s is present" % (self.class_name, str(locator)))
         return self.wait.until(EC.visibility_of_element_located(locator))

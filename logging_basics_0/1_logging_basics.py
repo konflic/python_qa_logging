@@ -7,7 +7,11 @@ import argparse
 # args = parser.parse_args()
 #
 # # Если не указываем файл передаем в stdout
-logging.basicConfig(level=logging.DEBUG, filename="example.log", format='%(asctime)s %(levelname)s %(filename)s %(message)s')
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename="example.log",
+    format='%(asctime)s %(levelname)s %(filename)s %(message)s'
+)
 
 # Уровень по умолчанию WARNING
 logging.debug('This is a debug message')
