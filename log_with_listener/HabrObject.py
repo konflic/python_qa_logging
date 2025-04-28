@@ -1,4 +1,4 @@
-from log_with_listener_2.BasePage import BasePage
+from log_with_listener.BasePage import BasePage
 from selenium.webdriver.common.by import By
 
 
