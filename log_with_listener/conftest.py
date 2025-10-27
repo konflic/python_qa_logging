@@ -4,7 +4,10 @@ import logging
 import uuid
 
 from selenium import webdriver
-from selenium.webdriver.support.events import EventFiringWebDriver, AbstractEventListener
+from selenium.webdriver.support.events import (
+    EventFiringWebDriver,
+    AbstractEventListener,
+)
 
 DRIVERS = os.path.expanduser("~/Downloads/drivers")
 
@@ -18,10 +21,9 @@ def pytest_addoption(parser):
     parser.addoption("--executor", action="store", default="127.0.0.1")
     parser.addoption("--log_level", action="store", default="INFO")
 
-log_map = {
-    "DEBUG": logging.DEBUG,
-    "INFO": logging.INFO
-}
+
+log_map = {"DEBUG": logging.DEBUG, "INFO": logging.INFO}
+
 
 @pytest.fixture
 def browser(request):
@@ -33,7 +35,7 @@ def browser(request):
         logger = logging.getLogger(request.node.name)
         logger.setLevel(logging.INFO)
         ch = logging.FileHandler(filename=f"logs/{request.node.name}.log")
-        ch.setFormatter(logging.Formatter('%(name)s:%(levelname)s %(message)s'))
+        ch.setFormatter(logging.Formatter("%(name)s:%(levelname)s %(message)s"))
         ch.setLevel(log_map[log_level])
         logger.addHandler(ch)
 
@@ -74,8 +76,8 @@ def browser(request):
             self.logger.info(f"Driver Quit")
 
         def on_exception(self, exception, driver):
-            self.logger.error(f'Oooops i got: {exception}')
-            driver.save_screenshot(f'logs/{uuid.uuid4()}.png')
+            self.logger.error(f"Oooops i got: {exception}")
+            driver.save_screenshot(f"logs/{uuid.uuid4()}.png")
 
     if browser == "chrome":
         driver = webdriver.Chrome()

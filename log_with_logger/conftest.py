@@ -11,10 +11,12 @@ from selenium.webdriver.firefox.service import Service as FirefoxService
 
 DRIVERS = os.path.expanduser("~/Downloads/drivers")
 
+
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
     parser.addoption("--executor", action="store", default="127.0.0.1")
-    parser.addoption("--log_level", action="store", default="INFO")
+    parser.addoption("--log_level", action="store", default="DEBUG")
+
 
 # TODO: Задизайнить через общий logger
 @pytest.fixture
@@ -22,10 +24,9 @@ def browser(request):
     browser = request.config.getoption("--browser")
     log_level = request.config.getoption("--log_level")
 
-
     logger = logging.getLogger(request.node.name)
-    file_handler = logging.FileHandler(f"logs/{request.node.name}.log")
-    file_handler.setFormatter(logging.Formatter('%(levelname)s %(message)s'))
+    file_handler = logging.FileHandler(f"logs/{request.node.name}.log", mode="w")
+    file_handler.setFormatter(logging.Formatter("%(levelname)s %(message)s"))
     logger.addHandler(file_handler)
     logger.setLevel(level=log_level)
 

@@ -6,8 +6,6 @@ import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 
-DRIVERS = os.path.expanduser("~/Downloads/drivers")
-# https://github.com/SeleniumHQ/selenium/wiki/Logging
 
 @pytest.fixture
 def driver(request):
@@ -25,13 +23,12 @@ def driver(request):
     _driver.quit()
 
     for el in console_log_entries:
-        print(el.text)
-        print(el.level)
-
+        if el.level == "error":
+            raise AssertionError(f"Found js error '{el.text}'")
 
 
 def test_logging_browser(driver):
-    driver.get('https://konflic.github.io/examples/')
+    driver.get("https://konflic.github.io/examples/")
     driver.execute_script("console.warn('Here is the WARNING message!')")
     driver.execute_script("console.error('Here is the ERROR message!')")
     driver.execute_script("console.log('Here is the LOG message!')")

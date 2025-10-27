@@ -3,7 +3,10 @@ from selenium.webdriver.common.by import By
 
 
 class HabrObject(BasePage):
-    SEARCH_ICON = (By.CSS_SELECTOR, ".tm-header-user-menu__search .tm-header-user-menu__icon_search")
+    SEARCH_ICON = (
+        By.CSS_SELECTOR,
+        ".tm-header-user-menu__search .tm-header-user-menu__icon_search",
+    )
     SEARCH_FILED = (By.CSS_SELECTOR, "input[name='q']")
     READ_MORE = (By.CSS_SELECTOR, ".tm-article-snippet__readmore")
     FILTERS_DROPDOWN = (By.CSS_SELECTOR, ".tm-navigation-dropdown__button")

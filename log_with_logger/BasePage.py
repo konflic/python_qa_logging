@@ -1,7 +1,9 @@
+from xml.dom.minidom import Element
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 import selenium.webdriver.support.expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import TimeoutException
 
 
 class BasePage:
@@ -18,11 +20,14 @@ class BasePage:
         self.driver.get(url)
 
     def click(self, locator):
+        element = self.is_present(locator)
         self.logger.debug("%s: Clicking element: %s" % (self.class_name, str(locator)))
-        self.wait.until(EC.element_to_be_clickable(locator)).click()
+        element.click()
 
     def input_and_submit(self, locator, value):
-        self.logger.debug("%s: Input %s in input %s" % (self.class_name, value, locator))
+        self.logger.debug(
+            "%s: Input %s in input %s" % (self.class_name, value, locator)
+        )
         find_field = self.wait.until(EC.presence_of_element_located(locator))
         find_field.click()
         find_field.clear()
@@ -30,5 +35,13 @@ class BasePage:
         find_field.send_keys(Keys.ENTER)
 
     def is_present(self, locator):
-        self.logger.info("%s: Check if element %s is present" % (self.class_name, str(locator)))
-        return self.wait.until(EC.visibility_of_element_located(locator))
+        self.logger.debug(
+            "%s: Check if element %s is present" % (self.class_name, str(locator))
+        )
+        try:
+            return self.wait.until(EC.visibility_of_element_located(locator))
+        except TimeoutException as e:
+            self.logger.error(
+                "%s: Element %s not found" % (self.class_name, str(locator))
+            )
+            raise e
