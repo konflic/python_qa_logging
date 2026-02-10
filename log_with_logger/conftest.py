@@ -1,21 +1,19 @@
 import datetime
 import os
-import shutil
 
 import pytest
 import logging
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeServise
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.firefox.service import Service as FirefoxService
-
-DRIVERS = os.path.expanduser("~/Downloads/drivers")
 
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
     parser.addoption("--executor", action="store", default="127.0.0.1")
-    parser.addoption("--log_level", action="store", default="DEBUG")
+    parser.addoption("--log_level", action="store", default="INFO")
 
 
 # TODO: Задизайнить через общий logger
@@ -32,12 +30,10 @@ def browser(request):
 
     logger.info("===> Test started at %s" % datetime.datetime.now())
 
-    if browser == "chrome":
-        service = ChromeServise()
-        driver = webdriver.Chrome(service=service)
-    elif browser == "firefox":
-        service = FirefoxService()
-        driver = webdriver.Firefox(service=service)
+    service = ChromeServise()
+    options = Options()
+    options.page_load_strategy = 'eager'
+    driver = webdriver.Chrome(service=service, options=options)
 
     driver.log_level = log_level
     driver.logger = logger

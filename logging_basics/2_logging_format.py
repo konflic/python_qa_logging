@@ -7,7 +7,6 @@ print("code")
 
 logger1 = logging.getLogger("logger1")
 
-# logger1.basicConfig(format='%(message)s')  # disable first
 logger1.warning("This when first event was logged.")  # disable second
 
 print("code2")

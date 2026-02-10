@@ -11,7 +11,7 @@ class HabrObject(BasePage):
     READ_MORE = (By.CSS_SELECTOR, "a.readmore")
     FILTERS_DROPDOWN = (By.CSS_SELECTOR, ".tm-navigation-dropdown__button")
     FILTER_BY_RATING = (By.XPATH, "//li[contains(text(), 'rating')]")
-    POST_BODY = (By.CSS_SELECTOR, ".tm-article-body")
+    POST_BODY = (By.CSS_SELECTOR, ".article-body")
     TAB_HUBS = (By.XPATH, "//a[text()='Hubs']")
     HUBS = (By.CSS_SELECTOR, ".tm-hubs-list")
     TAB_HUBS_AND_COMPANIES = (By.XPATH, "//h3[contains(text(), 'Hubs')]")

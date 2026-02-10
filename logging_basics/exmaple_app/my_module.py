@@ -1,6 +1,8 @@
 import logging
 import sys
 
+# logging.basicConfig(level=logging.CRITICAL)
+
 # Passing name to logger with __name__ variable
 logger = logging.getLogger(__name__)
 
@@ -9,7 +11,7 @@ file_handler.setFormatter(
     logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 )
 logger.addHandler(file_handler)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 
 def list_to_dict(l: list):

@@ -38,7 +38,6 @@ def test_logging_browser(driver):
             if (
                 "Network.response" in log["method"]
                 or "Network.request" in log["method"]
-                or "Network.webSocket" in log["method"]
                 or "Network.dataReceived" in log["method"]
             ):
                 data.append(log)
