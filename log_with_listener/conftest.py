@@ -9,9 +9,6 @@ from selenium.webdriver.support.events import (
     AbstractEventListener,
 )
 
-DRIVERS = os.path.expanduser("~/Downloads/drivers")
-
-
 # Конфигурируем логгер глобально и наблюдаем сайдэффект
 # logging.basicConfig(level=logging.INFO, filename="logs/test.log")
 
